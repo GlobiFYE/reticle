@@ -25,12 +25,12 @@ import {
   PredicateSchema,
   evalNet,
   evalConsole,
-  evalAnimation,
   evalSignal,
   evalSettled,
   type Predicate,
   type EvalResult,
 } from './predicate-eval.js';
+import { evalAnimationPredicate } from './predicate-animation.js';
 
 export { PredicateSchema, PredicateKind };
 export type { Predicate, EvalResult };
@@ -61,7 +61,6 @@ function unreadableComposite(child: EvalResult, evidence: unknown): EvalResult {
 const WINDOW_ONLY_KINDS: ReadonlySet<Predicate['kind']> = new Set([
   PredicateKind.NET,
   PredicateKind.CONSOLE,
-  PredicateKind.ANIMATION,
   PredicateKind.SIGNAL,
   PredicateKind.SETTLED,
 ]);
@@ -457,7 +456,7 @@ async function evaluatePredicateRaw(
     case PredicateKind.CONSOLE:
       return evalConsole(events, predicate);
     case PredicateKind.ANIMATION:
-      return evalAnimation(events, predicate);
+      return evalAnimationPredicate(session, events, predicate, floor);
     case PredicateKind.SIGNAL:
       return evalSignal(events, predicate);
     case PredicateKind.STATE:
